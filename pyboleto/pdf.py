@@ -452,7 +452,21 @@ class BoletoPDF(object):
             self.width - (45 * mm) + self.space,
             y + self.space, 'Código de baixa'
         )
-        self.pdf_canvas.drawString(0, y + self.space, 'Sacador / Avalista')
+        y += 2
+        
+        avalista = ""
+        if hasattr(boleto_dados, 'sacador_nome') and boleto_dados.sacador_nome:
+            if hasattr(boleto_dados, 'sacador_documento') and boleto_dados.sacador_documento:
+                avalista += boleto_dados.sacador_documento + ' - '
+            avalista += boleto_dados.sacador_nome
+             
+        self.pdf_canvas.setFont('Helvetica-Bold', self.font_size_title)
+        
+        self.pdf_canvas.drawString(0, y + self.space, 'Sacador / Avalista ')
+
+        self.pdf_canvas.drawString((30 * mm), y + self.space, avalista)
+
+        y += 4
 
         y += self.height_line
         self.pdf_canvas.drawString(0, y + self.delta_title, 'Pagador')
