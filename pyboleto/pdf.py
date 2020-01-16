@@ -253,6 +253,12 @@ class BoletoPDF(object):
         self.pdf_canvas.setFont('Helvetica', 6)
         self.delta_title = self.height_line - (6 + 1)
 
+        self.pdf_canvas.drawString(
+            0, 
+            self.height_line, 
+            'Sacador / Avalista'
+        )
+
         self.pdf_canvas.drawRightString(
             self.width,
             self.height_line,
@@ -387,6 +393,14 @@ class BoletoPDF(object):
             valor_documento
         )
 
+        if boleto_dados.sacador_documento and boleto_dados.sacador_nome: 
+            self.pdf_canvas.setFont('Helvetica', 6)
+            self.pdf_canvas.drawString(
+                0, 
+                self.height_line - 8, 
+                boleto_dados.sacador_documento + ' - ' + boleto_dados.sacador_nome
+            )
+
         self.pdf_canvas.setFont('Courier', 9)
         demonstrativo = boleto_dados.demonstrativo[0:25]
         for i in range(len(demonstrativo)):
@@ -440,7 +454,7 @@ class BoletoPDF(object):
         y = 1.5 * self.height_line
         self.pdf_canvas.drawRightString(
             self.width,
-            (1.5 * self.height_line) + self.delta_title - 1,
+            y + self.delta_title - 1,
             'Autenticação Mecânica / Ficha de Compensação'
         )
 
@@ -452,9 +466,19 @@ class BoletoPDF(object):
             self.width - (45 * mm) + self.space,
             y + self.space, 'Código de baixa'
         )
-        self.pdf_canvas.drawString(0, y + self.space, 'Sacador / Avalista')
 
-        y += self.height_line
+        self.pdf_canvas.drawString(0, y + self.space, 'Sacador / Avalista')
+        if boleto_dados.sacador_documento and boleto_dados.sacador_nome: 
+            self.pdf_canvas.setFont('Helvetica-Bold', self.font_size_title-0.5)
+            self.pdf_canvas.drawString(
+                (20 * mm), 
+                y + self.space, 
+                boleto_dados.sacador_documento + ' / ' + boleto_dados.sacador_nome
+            )
+
+        self.pdf_canvas.setFont('Helvetica', self.font_size_title)
+
+        y += self.height_line + 7
         self.pdf_canvas.drawString(0, y + self.delta_title, 'Pagador')
         sacado = boleto_dados.sacado
 
@@ -817,7 +841,7 @@ class BoletoPDF(object):
         y = 10 * mm  # margem inferior
 
         self._drawHorizontalCorteLine(x, y, self.width)
-        y += 4 * mm  # distancia entre linha de corte e barcode
+        y += 3 * mm  # distancia entre linha de corte e barcode
 
         d = self._drawReciboCaixa(boleto_dados, x, y)
         y += d[1] + (12 * mm)  # distancia entre Recibo caixa e linha de corte
