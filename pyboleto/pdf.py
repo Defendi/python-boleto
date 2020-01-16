@@ -469,7 +469,7 @@ class BoletoPDF(object):
 
         self.pdf_canvas.drawString(0, y + self.space, 'Sacador / Avalista')
         if boleto_dados.sacador_documento and boleto_dados.sacador_nome: 
-            self.pdf_canvas.setFont('Helvetica-Bold', self.font_size_title-0.5)
+            self.pdf_canvas.setFont('Helvetica-Bold', self.font_size_title-0.3)
             self.pdf_canvas.drawString(
                 (20 * mm), 
                 y + self.space, 
